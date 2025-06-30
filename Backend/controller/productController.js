@@ -92,3 +92,16 @@ exports.CreateReview=CatchasyncError(async(req,res,next)=>{
         
     }
 })
+
+exports.adminGetProducts=CatchasyncError(async(req,res,next)=>{
+    const products=await Product.find({})
+     if (!products) {
+        return next(new errorHandler('product not found', 404));
+    }
+
+    res.status(200).json({
+       success: true,
+        products,
+        productsCount: products.length
+    });
+})

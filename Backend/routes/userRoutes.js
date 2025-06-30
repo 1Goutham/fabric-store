@@ -1,9 +1,9 @@
 const express=require('express');
-const { createUser, login, DeleteUser, Logout, Changepassword, forgotPassword, resetPassword, UpdateUser, getUser } = require('../controller/userController');
+const { createUser, login, DeleteUser, Logout, Changepassword, forgotPassword, resetPassword, UpdateUser, getUser, getAllUsers } = require('../controller/userController');
 const router=express.Router();
 const multer=require('multer');
 const path = require('path');
-const {isAuthenticated}=require('../middleware/isAuthenticated');
+const {isAuthenticated, authorizeRoles}=require('../middleware/isAuthenticated');
 const { UpdateProduct } = require('../controller/productController');
 
 const upload =multer({storage:multer.diskStorage({
@@ -26,5 +26,6 @@ router.route('/ChangePassword').put(isAuthenticated,Changepassword);
 router.route('/password/reset/:token').post(resetPassword);
 router.route('/myprofile').get(isAuthenticated,getUser);
 router.route('/update').put(isAuthenticated, upload.single('avatar'),UpdateUser);
-
+router.route('/admin').get(isAuthenticated,authorizeRoles('admin'),getAllUsers);
+router.route('/admin/:id').delete(isAuthenticated,authorizeRoles('admin'),DeleteUser);
 module.exports = router;

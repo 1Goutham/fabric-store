@@ -63,18 +63,7 @@ exports.Logout=CatchasyncError(async(req,res,next)=>{
 
 })
 
-exports.DeleteUser=CatchasyncError(async(req,res,next)=>{
-    const user=await User.findById(req.params.id);
 
-    if(!user){
-        return next(new errorHandler('This UserName is not available',404));
-    }
-    await User.findByIdAndDelete(req.params.id);
-    res.status(201).json({
-        success:true
-    })
-
-})
 
 exports.Changepassword=CatchasyncError(async(req,res,next)=>{
     const user=await User.findById(req.user.id).select('+password');
@@ -164,4 +153,25 @@ exports.UpdateUser=CatchasyncError(async(req,res,next)=>{
         success: true,
         user
     })
+})
+
+exports.getAllUsers = CatchasyncError(async (req, res, next) => {
+   const users = await User.find();
+   res.status(200).json({
+        success: true,
+        users
+   })
+})
+
+exports.DeleteUser=CatchasyncError(async(req,res,next)=>{
+    const user=await User.findById(req.params.id);
+
+    if(!user){
+        return next(new errorHandler('This UserName is not available',404));
+    }
+    await User.findByIdAndDelete(req.params.id);
+    res.status(201).json({
+        success:true
+    })
+
 })

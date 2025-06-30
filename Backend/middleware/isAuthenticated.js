@@ -13,3 +13,12 @@ exports.isAuthenticated=CatchasyncError(async(req,res,next)=>{
     next();
 });
 
+exports.authorizeRoles = (...roles) => {
+   return  (req, res, next) => {
+        if(!roles.includes(req.user.role)){
+            return next(new errorHandler(`Role ${req.user.role} is not allowed`, 401))
+        }
+        next()
+    }
+};
+
