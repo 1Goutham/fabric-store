@@ -9,6 +9,7 @@ import { SearchOverlay } from "@/components/layout/search-overlay";
 import { CartDrawer } from "@/components/layout/cart-drawer";
 import { AssistantPanel, AskFab } from "@/components/intelligence/assistant-panel";
 import { BRAND } from "@/lib/constants";
+import { resolveAppUrl } from "@/lib/env";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-display", display: "swap", weight: ["400", "500", "600"] });
@@ -17,7 +18,7 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", displ
 export const metadata: Metadata = {
   title: { default: "FabricNest", template: "%s · FabricNest" },
   description: `${BRAND.tagline} A premium, intelligent commerce platform. ${BRAND.signature}.`,
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(resolveAppUrl()),
   authors: [{ name: BRAND.creator, url: BRAND.creatorUrl }],
   creator: BRAND.creator,
   openGraph: { title: "FabricNest", description: BRAND.tagline, siteName: "FabricNest", type: "website" },

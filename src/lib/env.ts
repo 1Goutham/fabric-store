@@ -10,6 +10,19 @@ const required = (key: string, fallback?: string): string => {
   return v;
 };
 
+/**
+ * Public origin of the deployment. Prefers NEXT_PUBLIC_APP_URL, then Vercel's
+ * generated hostname, then localhost. Empty strings (a blank env var on
+ * Vercel) are treated as unset so `new URL()` never receives "".
+ */
+export function resolveAppUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+  const vercel = (process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || "").trim();
+  if (vercel) return `https://${vercel.replace(/^https?:\/\//, "").replace(/\/$/, "")}`;
+  return "http://localhost:3000";
+}
+
 export const env = {
   get mongodbUri() {
     return required("MONGODB_URI");
@@ -26,7 +39,7 @@ export const env = {
     return Number(process.env.AUTH_SESSION_DAYS ?? 7);
   },
   get appUrl() {
-    return (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+    return resolveAppUrl();
   },
   get stripeSecretKey() {
     return process.env.STRIPE_SECRET_KEY || null;
