@@ -1,7 +1,7 @@
 export const BRAND = {
   name: "FabricNest",
   tagline: "Made for the way you move.",
-  creator: "Goutham",
+  creator: "1Goutham",
   creatorUrl: "https://1goutham.space",
   signature: "A product by Goutham",
 } as const;

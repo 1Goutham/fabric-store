@@ -46,7 +46,7 @@ npm run build
 
 ## Environment
 
-See [`.env.example`](.env.example). Everything is optional except `MONGODB_URI` and `AUTH_SECRET`:
+See [`.env.example`](.env.example). Everything is optional except `MONGODB_URI` and `AUTH_SECRET` (`NEXT_PUBLIC_APP_URL` falls back to the Vercel deployment URL, and the build does not need database access):
 
 - `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` switch checkout from the test gateway to Stripe. Point the webhook at `/api/webhooks/stripe` (`checkout.session.completed`, `checkout.session.expired`, `checkout.session.async_payment_*`).
 - `GEMINI_API_KEY` upgrades query understanding and the assistant's one-line stylist note. Prompts are compact (never the catalogue), cached in memory for 10 minutes, and all calls are server-side with short timeouts. Without it, everything still works on the rules engine.

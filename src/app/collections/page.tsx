@@ -9,15 +9,20 @@ import { PageShell } from "@/components/layout/page-shell";
 import { Footer } from "@/components/layout/footer";
 import { ProductImage } from "@/components/commerce/product-image";
 import { SectionHeading } from "@/components/ui/primitives";
+import type { CategoryDTO, ProductCard } from "@/types";
 
 export const metadata: Metadata = { title: "Collections" };
 export const revalidate = 300;
 
-export default async function CollectionsPage() {
+async function loadCollections(): Promise<{ cards: ProductCard[]; categories: CategoryDTO[] }> {
   await connectDB();
   const [cats, products] = await Promise.all([Category.find().sort({ order: 1 }).lean(), Product.find({ status: "active" }).sort({ featured: -1, salesCount: -1 }).limit(60).lean()]);
-  const cards = products.map((p) => toProductCard(p));
-  const categories = cats.map((c) => toCategory(c));
+  return { cards: products.map((p) => toProductCard(p)), categories: cats.map((c) => toCategory(c)) };
+}
+
+export default async function CollectionsPage() {
+  // Rendered at build time and revalidated: never let a database hiccup fail the build.
+  const { cards, categories } = await loadCollections().catch(() => ({ cards: [] as ProductCard[], categories: [] as CategoryDTO[] }));
   const coverFor = (slug: string) => cards.find((p) => p.moods.includes(slug as never));
   return (
     <>
