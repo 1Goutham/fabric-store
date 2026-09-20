@@ -34,8 +34,8 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-14 flex flex-col gap-4 border-t border-line pt-6 text-[12px] text-fg-faint md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} FabricNest. Prices in INR, inclusive of GST.</p>
           <Signature />
+          <p>Prices in INR, inclusive of GST.</p>
         </div>
       </div>
     </footer>
