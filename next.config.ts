@@ -5,14 +5,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   images: {
-    formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 60 * 60 * 24 * 30,
+    // Served directly from each image's CDN, not Vercel's optimizer; see src/lib/image-loader.ts.
+    loader: "custom",
+    loaderFile: "./src/lib/image-loader.ts",
     deviceSizes: [360, 640, 768, 1024, 1280, 1536, 1920],
-    remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "res.cloudinary.com" },
-      { protocol: "https", hostname: "**.public.blob.vercel-storage.com" },
-    ],
   },
   experimental: {
     optimizePackageImports: ["framer-motion", "lucide-react"],
