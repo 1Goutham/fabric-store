@@ -1,5 +1,6 @@
 import type { CategoryDTO, OrderDTO, ProductCard, ProductDetail, ReviewDTO } from "@/types";
 import type { Fabric, MoodSlug, Fit, OrderStatus, DeliveryMethod } from "@/lib/constants";
+import { categoryImage, lineImage, productImages } from "@/lib/data/catalogue-images";
 
 /**
  * Serializers: Mongoose documents (lean or hydrated) → plain DTOs for the client.
@@ -37,7 +38,7 @@ export interface ProductLike {
 const NEW_WINDOW_DAYS = 45;
 
 export function toProductCard(p: ProductLike): ProductCard {
-  const images = p.images ?? [];
+  const images = productImages(p.slug, p.name, p.images);
   const createdAt = p.createdAt ? new Date(p.createdAt) : new Date();
   return {
     id: p._id.toString(),
@@ -69,7 +70,7 @@ export function toProductDetail(p: ProductLike, category?: { slug: string; name:
     gender: p.gender ?? "unisex",
     sizes: p.sizes ?? [],
     variants: (p.variants ?? []).map((v) => ({ sku: v.sku, color: v.color, size: v.size, stock: v.stock })),
-    images: (p.images ?? []).map((i) => ({ url: i.url, alt: i.alt || p.name })),
+    images: productImages(p.slug, p.name, p.images).map((i) => ({ url: i.url, alt: i.alt || p.name })),
     occasions: p.occasions ?? [],
     seasons: p.seasons ?? [],
     stock: p.stock ?? 0,
@@ -92,7 +93,7 @@ export function toCategory(c: CategoryLike, productCount?: number): CategoryDTO 
     name: c.name,
     slug: c.slug,
     description: c.description ?? null,
-    image: c.image ?? null,
+    image: categoryImage(c.slug, c.image),
     ...(productCount !== undefined ? { productCount } : {}),
   };
 }
@@ -120,7 +121,7 @@ export function toOrder(o: OrderLike, withUser?: { _id: Id; name: string; email:
       productId: i.product.toString(),
       name: i.name,
       slug: i.slug,
-      image: i.image ?? "",
+      image: lineImage(i.slug, i.image),
       color: i.color,
       size: i.size,
       unitPrice: i.unitPrice,

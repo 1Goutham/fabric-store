@@ -1,3 +1,4 @@
+import { productImages } from "@/lib/data/catalogue-images";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/lib/models/Order";
 import { Product } from "@/lib/models/Product";
@@ -40,8 +41,8 @@ export async function getAdminStats() {
     products,
     byStatus: Object.fromEntries(ordersByStatus.map((s) => [s._id, s.n])),
     daily: days,
-    lowStock: lowStock.map((p) => ({ id: p._id.toString(), name: p.name, slug: p.slug, stock: p.stock ?? 0, image: p.images?.[0]?.url ?? null })),
+    lowStock: lowStock.map((p) => ({ id: p._id.toString(), name: p.name, slug: p.slug, stock: p.stock ?? 0, image: productImages(p.slug, p.name, p.images)[0]?.url ?? null })),
     recentOrders: recent.map((o) => toOrder(o, o.user)),
-    topProducts: topProducts.map((p) => ({ id: p._id.toString(), name: p.name, slug: p.slug, sales: p.salesCount ?? 0, price: p.price, image: p.images?.[0]?.url ?? null })),
+    topProducts: topProducts.map((p) => ({ id: p._id.toString(), name: p.name, slug: p.slug, sales: p.salesCount ?? 0, price: p.price, image: productImages(p.slug, p.name, p.images)[0]?.url ?? null })),
   };
 }
